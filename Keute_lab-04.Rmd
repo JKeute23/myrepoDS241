@@ -1,0 +1,131 @@
+---
+title: "Lab 04 - La Quinta is Spanish for next to Denny's, Pt. 1"
+author: "Jenna Keute"
+date: "8 October 2021"
+output: html_document
+---
+
+### Load packages and data
+
+```
+library(tidyverse) 
+library(dsbox) 
+```
+
+```
+states <- read_csv("data/states.csv")
+```
+
+### Exercise 1: Determining the dimensions of the Denny's dataset
+
+```{r}
+glimpse(dennys)
+nrow (dennys)
+ncol (dennys)
+names (dennys)
+```
+Each row represents one aspect of an individual Denny's location.
+The variables are: "address" "city"  "state"    "zip"   "longitude"  "latitude" 
+There are 1643 locations
+
+
+### Exercise 2: Determining the dimensions of the LaQuinta's dataset
+
+```{r}
+glimpse (laquinta)
+nrow (laquinta)
+ncol (laquinta)
+names (laquinta)
+```
+Each row represents one aspect of an individual Denny's location.
+The variables are: "address" "city"  "state"    "zip"   "longitude"  "latitude" 
+There are 909 locations
+
+### Exercise 3: Determining how many locations are outside the US
+
+#### Determining how many LaQuinta's locations are outside of the united States
+
+Yes, there are LaQuinta locations outside of the United States
+Locations are in Canada, Mexico, New Zealand, Honduras, Turkey, the United States Emirates, Chile, and Colombia
+
+#### Determining how many Denny's locations are outside of the united States
+
+Yes, there are Denny's locations outside of the United States
+Locations are in Canada, Mexico, Costa Rica, Honduras, El Salvador, Chili, the United Kingdom, and New Zealand
+...
+
+### Exercise 4
+
+While I am unsure of how to implement this, I would start by downloading and viewing the Denny's and LaQuinta's data as a csv file on R.  From there, I would create a "tibbe" on  R that would filter and select the columns based on "country" and state."  However, before I could do that, I would have to create a separate function that would merge all the states names and abbreviations into one file to make it easier when I implement the "filter" command to remove all locations in the US.  Because I know ahead of time that there are so few locations outside the US, I do not think it would be necessary to create another function that would make sorting each country, but that could make organizing the data easier regardless.
+...
+
+### Exercise 5
+
+```{r}
+dennys %>%
+  filter(!(state %in% states$abbreviation))
+```
+No, there are no locations outside of the US.
+...
+
+### Exercise 6
+
+```{r}
+dennys %>%
+  mutate(country = "United States")
+```
+
+
+...
+
+### Exercise 7
+
+Yes, there are LaQuinta locations outside of the United States
+Locations are in Canada, Mexico, New Zealand, Honduras, Turkey, the United States Emirates, Chile, and Colombia
+
+...
+
+### Exercise 8
+
+```{r}
+laquinta %>%
+  mutate(country = case_when(
+    state %in% state.abb     ~ "United States",
+    state %in% c("ON", "BC") ~ "Canada",
+    state == "ANT"           ~ "Colombia",
+    state == "ANT"           ~ "Chili",
+    state == "ANT"           ~ "Mexico",
+    state == "ANT"           ~ "New Zeland",
+    state == "ANT"           ~ "Honduras",
+    state == "ANT"           ~ "Turkey",
+    state == "ANT"           ~ "United States Emirates"))
+```
+
+
+laquinta <- laquinta %>%
+  filter(country == "United States")
+
+### Exercise 9
+
+```{r}
+dennys %>%
+  count(state) %>%
+  inner_join(states, by = c("state" = "abbreviation"))
+```
+
+
+### Exercise 10
+
+```{r}
+dennys <- dennys %>%
+  mutate(establishment = "Denny's")
+laquinta <- laquinta %>%
+  mutate(establishment = "La Quinta")
+
+dn_lq <- bind_rows(dennys, laquinta)
+
+ggplot(dn_lq, mapping = aes(x = longitude, y = latitude, color = establishment)) +
+  geom_point()
+```
+
+
