@@ -1,6 +1,6 @@
 ---
 title: "DS241 Final Project"
-author: Jenna Keute
+author: Jenna Keute, Ethan Desmarais, Luke St. Amour, Rodrigo Vecino De Haro
 output: html_document
 ---
 
